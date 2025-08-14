@@ -61,3 +61,4 @@ flutter-realtime-workspace-firebase-adminsdk-i8fiv-ee91027b1e.json
 
 # VSCode settings
 .vscode/
+/generated/prisma

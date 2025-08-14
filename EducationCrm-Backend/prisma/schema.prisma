@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(uuid())
+  email        String       @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  
+  // Relations
+  courses      Course[]     @relation("LecturerCourses")
+  enrollments  Enrollment[]
+  assignments  Assignment[] @relation("StudentAssignments")
+}
+
+model Course {
+  id           String       @id @default(uuid())
+  title        String
+  credits      Int
+  syllabusPath String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  
+  // Relations
+  lecturer     User         @relation("LecturerCourses", fields: [lecturerId], references: [id], onDelete: Cascade)
+  lecturerId   String
+  enrollments  Enrollment[]
+  assignments  Assignment[] @relation("CourseAssignments")
+  
+  @@unique([lecturerId, title]) // Prevent duplicate course titles by same lecturer
+}
+
+model Enrollment {
+  id          String       @id @default(uuid())
+  status      EnrollStatus @default(PENDING)
+  enrolledAt  DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  // Relations
+  course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId    String
+  student     User         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId   String
+  
+  @@unique([courseId, studentId]) // Prevent duplicate enrollments
+}
+
+model Assignment {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  filePath    String?
+  textBody    String?
+  grade       Int?      @db.SmallInt // Grades typically 0-100
+  weight      Int       @default(100) @db.SmallInt
+  dueDate     DateTime?
+  submittedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  course      Course    @relation("CourseAssignments", fields: [courseId], references: [id], onDelete: Cascade)
+  courseId    String
+  student     User      @relation("StudentAssignments", fields: [studentId], references: [id], onDelete: Cascade)
+  studentId   String
+  
+  @@index([courseId, studentId]) // Optimize queries for student assignments in courses
+}
+
+enum Role {
+  STUDENT
+  LECTURER
+  ADMIN
+}
+
+enum EnrollStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
