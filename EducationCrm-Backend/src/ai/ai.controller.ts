@@ -2,7 +2,7 @@ import { Controller, Post, Body, UseGuards, Request, HttpCode, HttpStatus, Valid
 import { AiService } from "./ai.service";
 import { JwtAuthGuard } from "../auth/guards/jwt.guards";
 import { RecommendCoursesDto, GenerateSyllabusDto, GenerateTextDto } from "./dto";
-import { Role } from "../../generated/prisma";
+import { Role } from "../../../EducationCrm-Backend/generated/prisma";
 
 interface AuthenticatedRequest extends Request {
   user: {

@@ -1,6 +1,6 @@
 // enrollment/dto/create-enrollment.dto.ts
 import { IsString, IsUUID, IsEnum, IsOptional } from "class-validator";
-import { EnrollStatus } from "../../../generated/prisma";
+import { EnrollStatus } from "../../../../EducationCrm-Backend/generated/prisma";
 
 
 

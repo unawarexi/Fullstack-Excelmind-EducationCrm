@@ -15,15 +15,13 @@ const course_module_1 = require("./course/course.module");
 const assignment_module_1 = require("./assignment/assignment.module");
 const enrollment_module_1 = require("./enrollment/enrollment.module");
 const config_1 = require("@nestjs/config");
+const ai_module_1 = require("./ai/ai.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            config_1.ConfigModule.forRoot({ isGlobal: true }),
-            prisma_module_1.PrismaModule, auth_module_1.AuthModule, user_module_1.UserModule, course_module_1.CourseModule, assignment_module_1.AssignmentModule, enrollment_module_1.EnrollmentModule
-        ],
+        imports: [config_1.ConfigModule.forRoot({ isGlobal: true }), prisma_module_1.PrismaModule, auth_module_1.AuthModule, user_module_1.UserModule, course_module_1.CourseModule, assignment_module_1.AssignmentModule, enrollment_module_1.EnrollmentModule, ai_module_1.AiModule],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

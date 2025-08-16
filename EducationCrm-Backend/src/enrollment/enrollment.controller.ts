@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, 
 import { EnrollmentService } from "./enrollment.service";
 import { CreateEnrollmentDto, UpdateEnrollmentDto } from "./dto";
 import { JwtAuthGuard } from "../auth/guards/jwt.guards";
-import { EnrollStatus } from "../../generated/prisma";
+import { EnrollStatus } from "../../../EducationCrm-Backend/generated/prisma";
 
 interface AuthenticatedRequest extends Request {
   user: {

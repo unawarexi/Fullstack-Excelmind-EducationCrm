@@ -1,4 +1,4 @@
-import { Role } from "../../../generated/prisma";
+import { Role } from "../../../../EducationCrm-Backend/generated/prisma";
 export declare class RegisterDto {
     name: string;
     email: string;

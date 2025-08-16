@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ConflictException, ForbiddenException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service"; // Adjust path as needed
 import { CreateEnrollmentDto, UpdateEnrollmentDto } from "./dto";
-import { Role, EnrollStatus } from "../../generated/prisma";
+import { Role, EnrollStatus } from "../../../EducationCrm-Backend/generated/prisma";
 
 @Injectable()
 export class EnrollmentService {

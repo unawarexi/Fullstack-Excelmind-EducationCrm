@@ -18,6 +18,7 @@ const user_service_1 = require("./user.service");
 const dto_1 = require("./dto");
 const jwt_guards_1 = require("../auth/guards/jwt.guards");
 let UserController = class UserController {
+    userService;
     constructor(userService) {
         this.userService = userService;
     }

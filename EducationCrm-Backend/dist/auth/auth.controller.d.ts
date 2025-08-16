@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import express from "express";
 import { AuthService } from "./auth.service";
 import { RegisterDto, LoginDto } from "./dto";
 export declare class AuthController {
@@ -8,7 +8,7 @@ export declare class AuthController {
         message: string;
         user: any;
     }>;
-    login(dto: LoginDto, res: Response): Promise<{
+    login(dto: LoginDto, res: express.Response): Promise<{
         message: string;
         user: {
             id: any;
@@ -16,15 +16,11 @@ export declare class AuthController {
             role: any;
         };
     }>;
-    logout(req: Request, res: Response): Promise<{
+    logout(req: express.Request, res: express.Response): Promise<{
         message: string;
     }>;
-    verifyToken(req: Request): Promise<{
+    verifyToken(req: express.Request): Promise<{
         message: string;
-        user: {
-            id: any;
-            email: any;
-            role: any;
-        };
+        user: Express.User | undefined;
     }>;
 }

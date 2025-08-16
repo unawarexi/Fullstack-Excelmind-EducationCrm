@@ -11,12 +11,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const express_1 = __importDefault(require("express"));
 const auth_service_1 = require("./auth.service");
 const dto_1 = require("./dto");
+const jwt_guards_1 = require("./guards/jwt.guards");
 let AuthController = class AuthController {
+    authService;
     constructor(authService) {
         this.authService = authService;
     }
@@ -31,6 +37,7 @@ let AuthController = class AuthController {
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
             maxAge: 60 * 60 * 1000,
+            path: "/",
         });
         return {
             message: "Login successful",
@@ -46,22 +53,14 @@ let AuthController = class AuthController {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
+            path: "/",
         });
         return { message: "Logout successful" };
     }
     async verifyToken(req) {
-        const token = req.cookies?.jwt;
-        if (!token) {
-            throw new common_1.UnauthorizedException("No token provided");
-        }
-        const decoded = await this.authService.validateToken(token);
         return {
             message: "Token is valid",
-            user: {
-                id: decoded.sub,
-                email: decoded.email,
-                role: decoded.role,
-            },
+            user: req.user,
         };
     }
 };
@@ -85,6 +84,7 @@ __decorate([
 ], AuthController.prototype, "login", null);
 __decorate([
     (0, common_1.Post)("logout"),
+    (0, common_1.UseGuards)(jwt_guards_1.JwtAuthGuard),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
@@ -93,7 +93,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "logout", null);
 __decorate([
-    (0, common_1.Post)("verify"),
+    (0, common_1.Get)("verify"),
+    (0, common_1.UseGuards)(jwt_guards_1.JwtAuthGuard),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),

@@ -11,8 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdatePasswordDto = exports.UpdateUserDto = exports.CreateUserDto = void 0;
 const class_validator_1 = require("class-validator");
-const prisma_1 = require("../../../generated/prisma");
+const prisma_1 = require("../../../../EducationCrm-Backend/generated/prisma");
 class CreateUserDto {
+    email;
+    password;
+    role;
 }
 exports.CreateUserDto = CreateUserDto;
 __decorate([
@@ -30,6 +33,8 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "role", void 0);
 class UpdateUserDto {
+    email;
+    role;
 }
 exports.UpdateUserDto = UpdateUserDto;
 __decorate([
@@ -43,6 +48,8 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "role", void 0);
 class UpdatePasswordDto {
+    currentPassword;
+    newPassword;
 }
 exports.UpdatePasswordDto = UpdatePasswordDto;
 __decorate([

@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../prisma/prisma.service";
 import OpenAI from "openai";
 import { RecommendCoursesDto, GenerateSyllabusDto } from "./dto";
-import { Role } from "../../generated/prisma";
+import { Role } from "../../../EducationCrm-Backend/generated/prisma";
 
 @Injectable()
 export class AiService {

@@ -16,7 +16,8 @@ exports.EnrollmentModule = EnrollmentModule;
 exports.EnrollmentModule = EnrollmentModule = __decorate([
     (0, common_1.Module)({
         providers: [enrollment_service_1.EnrollmentService],
-        controllers: [enrollment_controller_1.EnrollmentController]
+        controllers: [enrollment_controller_1.EnrollmentController],
+        exports: [enrollment_service_1.EnrollmentService],
     })
 ], EnrollmentModule);
 //# sourceMappingURL=enrollment.module.js.map

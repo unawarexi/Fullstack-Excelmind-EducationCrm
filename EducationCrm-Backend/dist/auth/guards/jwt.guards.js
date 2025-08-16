@@ -8,19 +8,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var JwtAuthGuard_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JwtAuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("../auth.service");
-let JwtAuthGuard = class JwtAuthGuard {
+let JwtAuthGuard = JwtAuthGuard_1 = class JwtAuthGuard {
+    authService;
+    logger = new common_1.Logger(JwtAuthGuard_1.name);
     constructor(authService) {
         this.authService = authService;
     }
     async canActivate(context) {
         const request = context.switchToHttp().getRequest();
-        const token = request.cookies?.jwt;
+        const token = this.extractToken(request);
         if (!token) {
-            throw new common_1.UnauthorizedException("No token provided");
+            this.logger.warn("No token provided in request");
+            throw new common_1.UnauthorizedException("Authentication required");
         }
         try {
             const decoded = await this.authService.validateToken(token);
@@ -32,12 +36,24 @@ let JwtAuthGuard = class JwtAuthGuard {
             return true;
         }
         catch (error) {
-            throw new common_1.UnauthorizedException("Invalid token");
+            this.logger.warn(`Token validation failed: ${error.message}`);
+            throw new common_1.UnauthorizedException("Invalid or expired token");
         }
+    }
+    extractToken(request) {
+        const cookieToken = request.cookies?.jwt;
+        if (cookieToken) {
+            return cookieToken;
+        }
+        const authHeader = request.headers?.authorization;
+        if (authHeader && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
     }
 };
 exports.JwtAuthGuard = JwtAuthGuard;
-exports.JwtAuthGuard = JwtAuthGuard = __decorate([
+exports.JwtAuthGuard = JwtAuthGuard = JwtAuthGuard_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], JwtAuthGuard);

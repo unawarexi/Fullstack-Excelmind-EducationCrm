@@ -1,6 +1,6 @@
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto, UpdateUserDto, UpdatePasswordDto } from "./dto";
-import { Role } from "../../generated/prisma";
+import { Role } from "../../../EducationCrm-Backend/generated/prisma";
 export declare class UserService {
     private readonly prisma;
     constructor(prisma: PrismaService);
@@ -18,7 +18,7 @@ export declare class UserService {
         totalCourses: any;
         totalEnrollments: any;
         totalAssignments: any;
-        averageGrade: number;
+        averageGrade: number | null;
         totalCredits: any;
     }>;
 }

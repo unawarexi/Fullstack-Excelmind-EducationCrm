@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service"; // Adjust import path as needed
 import { CreateUserDto, UpdateUserDto, UpdatePasswordDto } from "./dto";
-import { Role, User } from  "../../generated/prisma"
+import { Role, User } from  "../../../EducationCrm-Backend/generated/prisma"
 import * as bcrypt from "bcrypt";
 
 @Injectable()

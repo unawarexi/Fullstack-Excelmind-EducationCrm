@@ -18,7 +18,7 @@ export declare class UserController {
         totalCourses: any;
         totalEnrollments: any;
         totalAssignments: any;
-        averageGrade: number;
+        averageGrade: number | null;
         totalCredits: any;
     }>;
     update(id: string, updateUserDto: UpdateUserDto, req: AuthenticatedRequest): Promise<any>;

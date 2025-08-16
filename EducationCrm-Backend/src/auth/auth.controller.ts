@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Res, Req, HttpCode, HttpStatus, UseGuards, UnauthorizedException, Get } from "@nestjs/common";
-import { Response, Request } from "express";
+import express from "express";
 import { AuthService } from "./auth.service";
 import { RegisterDto, LoginDto } from "./dto";
 import { JwtAuthGuard } from "./guards/jwt.guards";
@@ -16,7 +16,7 @@ export class AuthController {
 
   @Post("login")
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
+  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: express.Response) {
     const { email, password } = dto;
     const result = await this.authService.login(email, password);
 
@@ -38,7 +38,7 @@ export class AuthController {
   @Post("logout")
   @UseGuards(JwtAuthGuard) // Protect logout endpoint
   @HttpCode(HttpStatus.OK)
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req: express.Request, @Res({ passthrough: true }) res: express.Response) {
     const token = req.cookies?.jwt;
 
     if (token) {
@@ -59,7 +59,7 @@ export class AuthController {
   @Get("verify") // Changed to GET as it's not modifying state
   @UseGuards(JwtAuthGuard) // Protect verify endpoint
   @HttpCode(HttpStatus.OK)
-  async verifyToken(@Req() req: Request) {
+  async verifyToken(@Req() req: express.Request) {
     // User info is already available from guard
     return {
       message: "Token is valid",

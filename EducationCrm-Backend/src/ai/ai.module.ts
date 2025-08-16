@@ -5,10 +5,7 @@ import { AiService } from "./ai.service";
 import { PrismaModule } from "../prisma/prisma.module";
 
 @Module({
-  imports: [
-    ConfigModule,
-    PrismaModule, 
-  ],
+
   controllers: [AiController],
   providers: [AiService],
   exports: [AiService], 
