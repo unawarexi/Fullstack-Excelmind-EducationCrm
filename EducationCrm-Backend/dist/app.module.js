@@ -10,22 +10,20 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_module_1 = require("./prisma/prisma.module");
 const auth_module_1 = require("./auth/auth.module");
-const user_controller_1 = require("./user/user.controller");
-const user_service_1 = require("./user/user.service");
 const user_module_1 = require("./user/user.module");
 const course_module_1 = require("./course/course.module");
-const assignment_controller_1 = require("./assignment/assignment.controller");
-const assignment_service_1 = require("./assignment/assignment.service");
 const assignment_module_1 = require("./assignment/assignment.module");
 const enrollment_module_1 = require("./enrollment/enrollment.module");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule, auth_module_1.AuthModule, user_module_1.UserModule, course_module_1.CourseModule, assignment_module_1.AssignmentModule, enrollment_module_1.EnrollmentModule],
-        controllers: [user_controller_1.UserController, assignment_controller_1.AssignmentController],
-        providers: [user_service_1.UserService, assignment_service_1.AssignmentService],
+        imports: [
+            config_1.ConfigModule.forRoot({ isGlobal: true }),
+            prisma_module_1.PrismaModule, auth_module_1.AuthModule, user_module_1.UserModule, course_module_1.CourseModule, assignment_module_1.AssignmentModule, enrollment_module_1.EnrollmentModule
+        ],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

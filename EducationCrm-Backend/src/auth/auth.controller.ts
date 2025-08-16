@@ -1,9 +1,8 @@
-import { Controller, Post, Body, Res, Req, HttpCode, HttpStatus, UseGuards, UnauthorizedException } from "@nestjs/common";
+import { Controller, Post, Body, Res, Req, HttpCode, HttpStatus, UseGuards, UnauthorizedException, Get } from "@nestjs/common";
 import { Response, Request } from "express";
 import { AuthService } from "./auth.service";
-import { RegisterDto, LoginDto, LogoutDto } from "./dto";
-import { AuthGuard } from "@nestjs/passport";
-import { Param } from "@nestjs/common";
+import { RegisterDto, LoginDto } from "./dto";
+import { JwtAuthGuard } from "./guards/jwt.guards";
 
 @Controller("auth")
 export class AuthController {
@@ -19,18 +18,17 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const { email, password } = dto;
-
     const result = await this.authService.login(email, password);
 
-    // Set HTTP-only cookie
+    // Set HTTP-only cookie with better security
     res.cookie("jwt", result.token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Use secure in production
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 60 * 60 * 1000, // 1 hour - match JWT expiration
+      path: "/", // Explicit path
     });
 
-    // Return user info (without token in response body for security)
     return {
       message: "Login successful",
       user: result.user,
@@ -38,44 +36,35 @@ export class AuthController {
   }
 
   @Post("logout")
+  @UseGuards(JwtAuthGuard) // Protect logout endpoint
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    // Get token from cookie
     const token = req.cookies?.jwt;
 
     if (token) {
-      // Validate and process logout
       await this.authService.logout(token);
     }
 
-    // Clear the JWT cookie
+    // Clear the JWT cookie with same options as when set
     res.clearCookie("jwt", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
+      path: "/",
     });
 
     return { message: "Logout successful" };
   }
 
-  @Post("verify")
+  @Get("verify") // Changed to GET as it's not modifying state
+  @UseGuards(JwtAuthGuard) // Protect verify endpoint
   @HttpCode(HttpStatus.OK)
   async verifyToken(@Req() req: Request) {
-    const token = req.cookies?.jwt;
-
-    if (!token) {
-      throw new UnauthorizedException("No token provided");
-    }
-
-    const decoded = await this.authService.validateToken(token);
-
+    // User info is already available from guard
     return {
       message: "Token is valid",
-      user: {
-        id: decoded.sub,
-        email: decoded.email,
-        role: decoded.role,
-      },
+      user: req.user, // This is set by the JwtAuthGuard
     };
   }
+
 }
